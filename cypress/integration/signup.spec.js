@@ -120,7 +120,7 @@ describe('cadastro', () => {
 
 
     });
-    context.only('quando não preencho nenhum dos campos', () => {
+    context('quando não preencho nenhum dos campos', () => {
         const alertMessages = [
             'Nome é obrigatório',
             'E-mail é obrigatório',
@@ -132,7 +132,7 @@ describe('cadastro', () => {
         });
 
         alertMessages.forEach((alert)=>{
-            it.only(`deve exibir ${alert.toLowerCase()}`, () => {
+            it(`deve exibir ${alert.toLowerCase()}`, () => {
                 signupPage.alertHaveText(alert)
             });
         })
