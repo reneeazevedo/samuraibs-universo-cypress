@@ -4,23 +4,28 @@ import faker from '@faker-js/faker'
 
 
 
-describe('cadastro', () => {
-    context('quando o usuário é novato', () => {
-        const user = {
-            name: 'Renée Azevedo',
-            email: 'renee.azevedo@samuraibs.com',
-            password: 'pwd123'
-        }
-        before(() => {
-            cy.task('removeUser', user.email)
+describe('cadastro', function() {
+    before(function()  {
+        cy.fixture('signup').then(function(signup){
+            this.success = signup.success
+            this.email_dup = signup.email_dup
+            this.email_inv = signup.email_inv
+            this.short_password = signup.short_password
+
+        })
+    });
+    context('quando o usuário é novato', function() {
+      
+        before(function() {
+            cy.task('removeUser', this.success.email)
                 .then(function (result) {
                     cy.log(JSON.stringify(result))
                 })
         });
-        it('deve cadatrar com sucesso', () => {
+        it('deve cadatrar com sucesso', function(){
 
             signupPage.go()
-            signupPage.form(user)
+            signupPage.form(this.success)
             signupPage.submit()
             signupPage.toast.shouldHaveText('Agora você se tornou um(a) Samurai, faça seu login para ver seus agendamentos!')
 
@@ -36,33 +41,14 @@ describe('cadastro', () => {
 
 
     context('quando o email já existe', () => {
-        const user = {
-            name: 'maria',
-            email: 'maria4@maria.com',
-            password: "pwd123",
-            is_provider: true
-        }
-        before(() => {
-            cy.task('removeUser', user.email)
-                .then(function (result) {
-                    cy.log(JSON.stringify(result))
-                })
-            cy.request({
-                method: 'POST',
-                url: 'http://localhost:3333/users',
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8'
-                },
-                body: user
-            }).then((response) => {
-                expect(response.status).to.eq(200)
-
-            })
+       
+        before(function(){
+          cy.postUser(this.email_dup)
         });
-        it('deve exibir email já cadastrado', () => {
+        it('deve exibir email já cadastrado',function() {
 
             signupPage.go()
-            signupPage.form(user)
+            signupPage.form(this.email_dup)
             signupPage.submit()
             signupPage.toast.shouldHaveText('Email já cadastrado para outro usuário.')
             /*cy.intercept('POST','/users',{
@@ -75,48 +61,41 @@ describe('cadastro', () => {
         });
     });
 
-    context('quando o email é incorreto', () => {
-        const user = {
-            name: 'Elizabeth olsen',
-            email: 'eli.samuraibs.com',
-            password: 'pwd123'
-        }
-        it('deve exibir mensagem de alerta', () => {
+    context('quando o email é incorreto', function() {
+       
+        it('deve exibir mensagem de alerta', function() {
             signupPage.go()
-            signupPage.form(user)
+            signupPage.form(this.email_inv)
             signupPage.submit()
             signupPage.alertHaveText('Informe um email válido')
 
         });
 
     });
-    context('quando a senha é muito curta', () => {
+    context('quando a senha é muito curta', function() {
         const passwords = ['1', '2a', 'ab3', 'abc4', 'ab#c5']
-        const user = {
-            name: 'Jason Friday',
-            email: 'jason@gmail.com',
-            password: '1'
-        }
-        beforeEach(() => {
-            signupPage.go()
-            
-        });
+
 
         passwords.forEach(function (password) {
 
-            user.password = password
+            it(`não deve cadastrar com a senha: ${password}`, function(){
+                
+                this.short_password.password = password
 
-
-            it(`não deve cadastrar com a senha: ${password}`, () => {
-                signupPage.form(user)
-                signupPage.submit()     
+                signupPage.go()
+                signupPage.form(this.short_password)
+                signupPage.submit()   
+               
             });
+            
+        })
+        afterEach(function () {
+            signupPage.alert.haveText('Pelo menos 6 caracteres')
         })
 
-        afterEach(() => {
-            signupPage.alertHaveText('Pelo menos 6 caracteres')
-        });
-
+       
+          
+     
 
 
     });
@@ -133,7 +112,7 @@ describe('cadastro', () => {
 
         alertMessages.forEach((alert)=>{
             it(`deve exibir ${alert.toLowerCase()}`, () => {
-                signupPage.alertHaveText(alert)
+                signupPage.alert.haveText(alert)
             });
         })
     });

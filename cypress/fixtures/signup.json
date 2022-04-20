@@ -1,0 +1,23 @@
+{
+  "success": {
+    "name": "Renée Azevedo",
+    "email": "renee.azevedo@samuraibs.com",
+    "password": "pwd123"
+  },
+  "email_dup": {
+    "name": "maria",
+    "email": "maria4@maria.com",
+    "password": "pwd123",
+    "is_provider": true
+  },
+  "email_inv": {
+    "name": "Elizabeth olsen",
+    "email": "eli.samuraibs.com",
+    "password": "pwd123"
+  },
+  "short_password":{
+    "name":"Jason Friday",
+    "email":"jason@gmail.com",
+    "password":null
+  }
+}
