@@ -2,6 +2,7 @@
     "viewportWidth": 1440,
     "viewportHeight": 901,
     "baseUrl":"http://localhost:3000/",
+    "apiServer":"http://localhost:3333",
     "dbConfig":{
         "host":"jelani.db.elephantsql.com",
         "user":"otxtfapw",

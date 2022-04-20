@@ -24,6 +24,19 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 import moment from 'moment'
+import {apiServer} from '../../cypress.json'
+import loginPage from './pages/login'
+import dashPage from './pages/dash'
+
+
+Cypress.Commands.add('uiLogin', function (user) {
+    loginPage.go()
+    loginPage.form(user)
+    loginPage.submit()
+    dashPage.header.userLoggedIn(user.name)
+    
+})
+
 
 Cypress.Commands.add('postUser',(user)=>{
     cy.task('removeUser', user.email)
@@ -32,7 +45,7 @@ Cypress.Commands.add('postUser',(user)=>{
     })
     cy.request({
         method: 'POST',
-        url: 'http://localhost:3333/users',
+        url: `${apiServer}/users`,
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
         },
@@ -45,7 +58,7 @@ Cypress.Commands.add('postUser',(user)=>{
 Cypress.Commands.add('recoveryPass', function(email){
     cy.request({
         method: 'POST',
-        url: 'http://localhost:3333/password/forgot',
+        url: `${apiServer}/password/forgot`,
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
         },
@@ -76,7 +89,7 @@ Cypress.Commands.add('createAppointment', function (hour) {
     }
     cy.request({
         method:'POST',
-        url:'http://localhost:3333/appointments',
+        url: `${apiServer}/appointments`,
         headers:{
             authorization:`Bearer ${Cypress.env('apiToken')}`
         },
@@ -90,7 +103,7 @@ Cypress.Commands.add('createAppointment', function (hour) {
 Cypress.Commands.add('setProviderId', function (providerEmail) {
     cy.request({
         method: 'GET',
-        url:'http://localhost:3333/providers',
+        url: `${apiServer}/providers`,
 
         headers:{
             authorization:`Bearer ${Cypress.env('apiToken')}`
@@ -116,7 +129,7 @@ Cypress.Commands.add('apiLogin', function (user) {
     }
     cy.request({
         method:'POST',
-        url:'http://localhost:3333/sessions',
+        url:`${apiServer}/sessions`,
         body: payload
     }).then(response =>{
         Cypress.env('apiToken',response.body.token)
