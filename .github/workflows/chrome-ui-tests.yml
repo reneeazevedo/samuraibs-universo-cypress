@@ -5,6 +5,10 @@ name: Chrome UI Tests
 # Controls when the workflow will run
 on:
   workflow_dispatch:
+    inputs:
+      specs:
+        description: 'Run ALL or unique spec'
+        default: cypress/integration/*
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -24,20 +28,20 @@ jobs:
       - name: Ping API (heroku)
         uses: Leocardoso94/is-my-site-up@v1.2
         with:
-          site: https://samuraibs-api-rma.herokuapp.com
+          site: https://samuraibs-api-papito.herokuapp.com
 
       - name: 'UI Tests - Chrome'
         uses: cypress-io/github-action@v2
         with:
           # we have already installed all dependencies above
           install-command: yarn install
-          wait-on: 'https://samuraibs-web-rma.herokuapp.com'
+          wait-on: 'https://samuraibs-web-papito.herokuapp.com'
           wait-on-timeout: 120
           browser: chrome
           record: true
           parallel: true
           group: 'UI - Chrome'
-          spec: cypress/integration/*
+          spec: ${{ github.event.inputs.specs }}
         env:
           TZ: America/Sao_Paulo
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
