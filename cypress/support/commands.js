@@ -78,7 +78,7 @@ Cypress.Commands.add('recoveryPass', function(email){
 Cypress.Commands.add('createAppointment', function (hour) {
     let now = new Date()
     now.setDate(now.getDate() + 1)
-    Cypress.env('appointmentDay', now.getDate())
+    Cypress.env('appointmentDate', now)
 
     const date = moment(now).format('YYYY-MM-DD ' + hour + ':00')
     
@@ -122,7 +122,7 @@ Cypress.Commands.add('setProviderId', function (providerEmail) {
         });
     })
 })
-Cypress.Commands.add('apiLogin', function (user) {
+Cypress.Commands.add('apiLogin', function (user, setLocalStorage = false) {
     const payload = {
         email:user.email,
         password:user.password
@@ -134,7 +134,17 @@ Cypress.Commands.add('apiLogin', function (user) {
     }).then(response =>{
         Cypress.env('apiToken',response.body.token)
         expect(response.status).to.be.eq(200)
+        if(localStorage){
+            const {token, user} = response.body
+
+            window.localStorage.setItem('@Samurai:token', token)
+            window.localStorage.setItem('@Samurai:user', JSON.stringify(user))
+        }
+        
+
         
     })
-    
+    if(localStorage){
+        cy.visit('/dashboard')
+    }
 })

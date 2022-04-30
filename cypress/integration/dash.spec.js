@@ -9,17 +9,17 @@ describe('dashboard', () => {
             cy.postUser(customer)
          
             cy.apiLogin(customer)
-            
-           
             cy.setProviderId(provider.email)
             cy.createAppointment(appointment.hour)
         });
 
         it('o mesmo deve ser exibido no dashboard', function () {
-            const day = Cypress.env('appointmentDay')
-            cy.uiLogin(provider)
+            const date = Cypress.env('appointmentDate')
+            //cy.uiLogin(provider)
+            cy.apiLogin(provider, true)
+            
             dashPage.calendarShouldBeVisible()
-            dashPage.selectDay(day)
+            dashPage.selectDay(date)
             dashPage.appointmentShouldBeVisible(customer, appointment.hour)
             
             

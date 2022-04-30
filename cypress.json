@@ -1,8 +1,9 @@
 {
     "viewportWidth": 1440,
-    "viewportHeight": 901,
-    "baseUrl":"http://localhost:3000/",
-    "apiServer":"http://localhost:3333",
+    "viewportHeight": 900,
+    "defaultCommandTimeout":30000,
+    "baseUrl":"https://samuraibs-web-rma.herokuapp.com",
+    "apiServer":"https://samuraibs-api-rma.herokuapp.com",
     "dbConfig":{
         "host":"jelani.db.elephantsql.com",
         "user":"otxtfapw",
