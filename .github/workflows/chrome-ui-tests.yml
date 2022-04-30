@@ -14,7 +14,7 @@ jobs:
   chrome-ui-tests:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    container: cypress/browsers:node12.18.3-chrome87-ff82
+    container: cypress/browsers:node14.17.6-chrome100-ff98
     strategy:
       fail-fast: false
       matrix:
