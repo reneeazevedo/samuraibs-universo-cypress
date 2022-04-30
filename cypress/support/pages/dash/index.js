@@ -17,7 +17,7 @@ class DashPage {
             cy.get(el.nextMonthButton).click()
 
             let monthName = appointmentDate.toLocaleString('pt-BR',{month:'long'})
-           
+            
 
             /*let monthName
             switch (appointmentDate.getMonth()) {
@@ -62,7 +62,7 @@ class DashPage {
                     break;
             }*/
 
-            cy.contains(el.monthYearName, monthName)
+            cy.contains(el.monthYearName, monthName[0].toUpperCase() + monthName.slice(1))
                 .should('be.visible')
         } else {
             cy.log('Hoje não é o último dia do mês')
